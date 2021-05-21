@@ -465,7 +465,7 @@ resources:
 {{ else }}
 ```
 
-We also need to add a `{{ end }}` to delimit the `if` statement:
+We also need to add a `{{- end -}}` to delimit the `if` statement:
 
 ```yaml
     ...
@@ -473,7 +473,7 @@ We also need to add a `{{ end }}` to delimit the `if` statement:
 {{- end -}}
 {{- end -}}
 ```
-> :bulb: We end up having two `{{ end }}` at the end of the file because we have to delimit both the template `define` and the `if` statement.
+> :bulb: We end up having two `{{- end -}}` at the end of the file because we have to delimit both the template `define` and the `if` statement.
 
 The final `_helpers.tpl` should look like this:
 
