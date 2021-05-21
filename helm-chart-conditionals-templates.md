@@ -154,13 +154,14 @@ When using `include` you must specify the context for the template to use: `{{ i
 
 ## Exercise
 
-In this exercise we will first conditionally specify which nodePort for our sentences service to use.
+In this exercise we will first conditionally specify which nodePort our sentences service should use.
+
 Then we will template the resource maps of the deployments, using conditional overrides.
 
 ### Overview
 
 - Make the sentences service type parameterized
-- Conditionally specify nodePort
+- Conditionally specify which nodePort to use
 - Template resources map for deployments
 - Conditionally override the template
 
@@ -177,6 +178,8 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 
 First let's have a look at the sentences service template, the file is located in `sentence-app/templates/sentences-svc.yaml`
 
+<details>
+<summary>Default sentences-svc.yaml</summary>
 ```yaml
 apiVersion: v1
 kind: Service
@@ -195,8 +198,9 @@ spec:
     component: main
   type: NodePort
 ```
+</details>
 
-As we can see the the type and ports for the service are hard-coded in the service template.
+As we can see the type and ports for the service are hard-coded in the service template.
 
 Let's make the type a parameter:
 
@@ -209,7 +213,7 @@ spec:
   type: {{ .Values.sentence.service.type }}
 ```
 
-Add the type your `values.yaml`:
+Add the type to your `values.yaml`:
 ```yaml
 sentence:
   ...
@@ -234,11 +238,11 @@ spec:
 Sweet, that works.
 Let's try to change the `type` in your `values.yaml` to `NodePort`.
 
-**Conditionally specify nodePort**
+Render the template again, and verify that it is now set to `NodePort`.
 
-Render the file again.
+**Conditionally specify which nodePort to use**
 
-When using the `NodePort` service type Kubernetes allows us to specify which port we would like to use.
+When using the `NodePort` service type, Kubernetes allows us to specify which port we would like to use.
 This argument is only relevant when using the `NodePort` service type, so let's make a conditional that only adds the port if the type is NodePort.
 
 Add the port to your `values.yaml`:
@@ -291,7 +295,7 @@ spec:
   type: NodePort
 ```
 
-Now let's try to change the type back to `ClusterIP` in values file, and render the template again:
+Now let's try to change the type back to `ClusterIP` in the values file, and render the template again:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-svc.yaml
@@ -313,6 +317,7 @@ So that we can verify that the `nodePort` key is only added when the `type` is s
 
 **Template resources map for deployments**
 
+<!-- TODO add link to previous exercise -->
 In the previous exercise we learned how to parameterize the `resoruces` map of our deployments.
 
 Now we would like to have a sensible default for our pod resources, with the ability to override the default on a per service basis.
@@ -449,7 +454,7 @@ There we go!
 
 **Conditionally override the template**
 
-But now our sentences deployment will always use the resources map specified in the template, so lets a condition so that we can override it:
+But now our sentences deployment will always use the resources map specified in the template, so lets add a condition so that we can override it:
 
 Edit your `_helpers.tpl` and the following if statement below the `define` line:
 
@@ -468,9 +473,9 @@ We also need to add a `{{ end }}` to delimit the `if` statement:
 {{- end -}}
 {{- end -}}
 ```
+> :bulb: We end up having two `{{ end }}` at the end of the file because we have to delimit both the template `define` and the `if` statement.
 
 The final `_helpers.tpl` should look like this:
-
 
 ```yaml
 {{- define "resources" -}}
@@ -489,7 +494,7 @@ resources:
 {{- end -}}
 ```
 
-Now we setup our template so that it expects to be passed a context that potentially contains a `resources` map.
+Now we have modified our template, so that it expects a `context` that potentially contains a `resources` map.
 
 This means that if the context indeed contains a `resources` map, then it will be rendered to yaml and returned, if not the default resources map is returned.
 
@@ -580,8 +585,8 @@ spec:
 
 Which means that the template will be used.
 
-The neat thing here is that we can use the same template in the `age` and `name` deployments, such if we add a `resources` map for those functions, then those would override the template, which means that we can specify custom resources requests and limits for each deployment, just by setting the values in our `values.yaml`.
+The neat thing here is that we can use the same template in the `age` and `name` deployments.
+
+Now if we do not specify any resource limitations, the defaults will be used, but we can override those simply by adding limitations to the `values.yaml`.
 
 </details>
-
-## Cleanup
