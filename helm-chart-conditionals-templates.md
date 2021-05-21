@@ -9,13 +9,13 @@
 
 ## Introduction
 
-Sometimes we to do different things in our templates depending on how our deployment is to be configured.
+Sometimes we want to do different things in our templates depending on how our deployment is to be configured.
 
-For example we might want to specify a specific port to use for a NodePort type service, but only want to that if the service is of type NodePort.
+For example we might want to specify a specific port to use for a NodePort service, but only if the service is of type NodePort.
 
 To achieve this we can use conditionals and control flow in our helm code.
 
-Further we can define templates and use these customize sections of code that are often reused.
+Further we can define templates for chunks of code we want to reuse, but with different parameters throughout the code.
 
 ### Helm Control Flow and Conditionals
 
@@ -29,6 +29,7 @@ The simplest form is an `if` statement:
 {{ end }}
 ```
 > :bulb: We write `<pipeline>` here to indicate that the argument for the conditional can be as simple or complicated as needed.
+
 > :bulb: Referencing a value is implcitly a valid pipeline!
 
 A pipeline is evaluated as false if it returns:
@@ -75,7 +76,7 @@ We can also use `else if` if we have multiple conditions:
 
 Helm has a number of functions that can be used in the conditionals like `and` and `eq`.
 
-We can use the `eq` or 'equals' function to check if if value matches anothre predefined value:
+We can use the `eq` or 'equals' function to check if a value matches another predefined value:
 ```
 {{ eq .Values.myVal "MatchThis" }}
 ```
@@ -96,7 +97,7 @@ We could even use the above `and` example as the conditional for an `if` stateme
 {{ end }}
 ```
 
-There are a number of functions available that you can use control the flow of your templates: [Control flow functions documentation](https://helm.sh/docs/chart_template_guide/function_list/#logic-and-flow-control-functions)
+There are a number of functions available that you can use to control the flow of your templates: [Control flow functions documentation](https://helm.sh/docs/chart_template_guide/function_list/#logic-and-flow-control-functions)
 
 ### Helm Templates
 
@@ -124,7 +125,7 @@ foo: {{ .Values.bar }}
 {{ end }}
 ```
 
-When invoking the template, we must pass an object containing the values, if we want to make the entire `.Values` avaialble, we specify the entire context with a 'dot' `.`:
+When invoking the template, we must pass an object containing the values, if we want to make the entire `.Values` available, we specify the entire context with a 'dot' `.`:
 
 ```
 {{ template "myTemplateWithArgs" . }}
@@ -136,11 +137,12 @@ We can also specify a specific subset for the template to use:
 {{ template "myTemplateWithArgs" .Values.myArgs }}
 ```
 
-You can place helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`, which helm will not try to render as part of your chart.
+You can place helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`.
+Helm will not try to render `templates/_helpers.tpl` as part of your chart.
 
 [Templates Documentation](https://helm.sh/docs/chart_best_practices/templates/#helm)
 
-You can use templates in pipelines, but in that case you must use the `include` keyword instead of `template`:
+You can use templates in pipelines, but to do so you must use the `include` keyword instead of `template`:
 
 ```
 {{ include "myTemplateWithArgs" .Values.myArgs | indent 4 }}
