@@ -327,7 +327,7 @@ To do this we will use a `template`.
 Let's create a template file:
 
 ```sh
-touch helm-chart/sentence-app/templates/_helpers.tpl
+touch sentence-app/templates/_helpers.tpl
 ```
 > :bulb: You can create the file in any way you want, it just has to be placed in the `templates` directory.
 
