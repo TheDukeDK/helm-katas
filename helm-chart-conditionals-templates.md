@@ -81,7 +81,7 @@ We can use the `eq` or 'equals' function to check if a value matches another pre
 {{ eq .Values.myVal "MatchThis" }}
 ```
 
-We can even use these as arguments to other functions like the `and` function, which returns true if both of it's argumetns are true:
+We can even use these as arguments to other functions like the `and` function, which returns true if both of it's arguments are true:
 
 ```
 {{ and (eq .Values.myVal "MatchThis") .Values.myOtherVal }}
@@ -200,7 +200,7 @@ spec:
 ```
 </details>
 
-As we can see the type and ports for the service are hard-coded in the service template.
+The type and ports for the service are hard-coded in the service template.
 
 Let's make the type a parameter:
 
