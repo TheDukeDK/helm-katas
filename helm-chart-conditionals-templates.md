@@ -210,12 +210,12 @@ kind: Service
 ...
 spec:
   ...
-  type: {{ .Values.sentence.service.type }}
+  type: {{ .Values.sentences.service.type }}
 ```
 
 Add the type to your `values.yaml`:
 ```yaml
-sentence:
+sentences:
   ...
   service:
     type: ClusterIP
@@ -248,7 +248,7 @@ This argument is only relevant when using the `NodePort` service type, so let's 
 Add the port to your `values.yaml`:
 
 ```yaml
-sentence:
+sentences:
   ...
   service:
     type: NodePort
@@ -590,3 +590,15 @@ The neat thing here is that we can use the same template in the `age` and `name`
 Now if we do not specify any resource limitations, the defaults will be used, but we can override those simply by adding limitations to the `values.yaml`.
 
 </details>
+
+### Extra Exercises
+
+If you have more time, or you want to practice using templates and conditionals then you can do the extra steps:
+
+<!-- <details> -->
+<!-- <summary>Extras</summart> -->
+<!-- </details> -->
+
+### Food for thought
+
+- When should you use templates in Helm?
